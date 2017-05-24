@@ -2,7 +2,7 @@
 Java Card implementation of tiqr
 
 
-## Java Card Development Kit
+## Install Java Card Development Kit
 
 
 http://www.oracle.com/technetwork/java/embedded/javacard/
@@ -22,14 +22,15 @@ java_card_kit-2_2_2-linux.zip
         mkdir jck222
         unzip -d jck222/ java_card_kit-2_2_2-linux/java_card_kit-2_2_2/*.zip 
 
-
-# build
-
-	export JAVA_HOME=$(/usr/libexec/java_home)
-
 # JC kit
 
 	unzip java_card_kit-2_2_2-linux/java_card_kit-2_2_2/java_card_kit-2_2_2-rr-bin-linux-do.zip 
+
+
+## build
+
+	export JAVA_HOME=$(/usr/libexec/java_home)
+
 
 # applet
 
