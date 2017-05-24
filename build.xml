@@ -1,0 +1,53 @@
+<project>
+
+    <property name="APPLET_AID" value="0x3B:0x29:0x63:0x61:0x6C:0x63:0x01"/>
+    <property name="APPLET_NAME" value="applet.HelloApplet"/>
+    <property name="JAVA_PACKAGE" value="applet"/>
+    <property name="PACKAGE_AID" value="0x3B:0x29:0x63:0x61:0x6C"/>
+    <property name="VERSION" value="1.0"/>
+
+    <path id="classpath">
+        <fileset dir="lib" includes="api.jar"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/card"/>
+        <mkdir dir="build/terminal"/>
+        <javac srcdir="src/applet" destdir="build/card" classpathref="classpath" source="1.2" target="1.1" includeantruntime="false" />
+        <javac srcdir="src/terminal" destdir="build/terminal" includeantruntime="false" />
+    </target>
+
+    <target depends="compile" name="convert" description="convert to .cap" >
+        <java classname="com.sun.javacard.converter.Converter" fork="true" failonerror="true">
+            <arg line="-classdir build/card"/>
+            <arg line="-verbose"/>
+            <arg line="-exportpath api_export_files"/>
+            <arg line="-out CAP"/>
+            <arg line="-applet ${APPLET_AID} ${APPLET_NAME}"/>
+            <arg line="${JAVA_PACKAGE} ${PACKAGE_AID} ${VERSION}"/>
+            <classpath>
+                <pathelement location="lib/converter.jar"/>
+                <pathelement location="lib/offcardverifier.jar"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target depends="convert" name="reinstall" description="reinstall .cap on card" >
+        <java jar="gp.jar" fork="true" failonerror="true">
+            <arg line="--reinstall build/card/applet/javacard/applet.cap"/>
+        </java>
+    </target>
+
+    <target name="run">
+        <java classname="terminal.Echo" fork="true" failonerror="true">
+            <classpath>
+                <pathelement path="build/terminal"/>
+            </classpath>
+        </java>
+    </target>
+
+</project>
